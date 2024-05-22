@@ -2,7 +2,7 @@
 //  CombineTasksApp.swift
 //  CombineTasks
 //
-//  Created by Игорь Девин on 22.05.2024.
+//  Created by Игорь Девин on 21.05.2024.
 //
 
 import SwiftUI
