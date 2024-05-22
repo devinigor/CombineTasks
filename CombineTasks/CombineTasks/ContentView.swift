@@ -8,41 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var viewModel = PiplineViewModel()
+    @StateObject private var viewModel = CancellingMultiplePipelinesViewModel()
     var body: some View {
-        VStack {
-            Spacer()
-            Text(viewModel.data ?? "")
-                .font(.title)
-                .foregroundColor(.green)
-            
-            Text(viewModel.status ?? "")
-                .foregroundColor(.blue)
-            
-            Spacer()
-            Button {
-                viewModel.cancel()
-            } label: {
-                Text("Отменить заказ")
-                    .foregroundColor(.white)
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
+        Group {
+            HStack{
+                TextField("Name", text: $viewModel.firstName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                Text(viewModel.firstNameValidation)
             }
-            .background(.red)
-            .cornerRadius(8)
-            .opacity(viewModel.status == "Ищем авто" ? 1.0 : 0.0)
-            
-            Button {
-                viewModel.refresh()
-            } label: {
-                Text("Заказать")
-                    .foregroundColor(.white)
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
+            HStack{
+                TextField("SecondName", text: $viewModel.lastName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                Text(viewModel.lastNameValidation)
             }
-            .background(.blue)
-            .cornerRadius(8)
-            .padding()
+        }
+        .padding()
+        
+        Button("Cancel") {
+            viewModel.cancelAllValidations()
         }
     }
 }
@@ -50,4 +33,3 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
-
