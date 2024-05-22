@@ -8,26 +8,46 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var viewModel = ContentViewModel()
+    @StateObject var viewModel = PiplineViewModel()
     var body: some View {
         VStack {
-            HStack{
-                TextField("Ваше имя", text: $viewModel.name)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                Text(viewModel.validation)
+            Spacer()
+            Text(viewModel.data ?? "")
+                .font(.title)
+                .foregroundColor(.green)
+            
+            Text(viewModel.status ?? "")
+                .foregroundColor(.blue)
+            
+            Spacer()
+            Button {
+                viewModel.cancel()
+            } label: {
+                Text("Отменить заказ")
+                    .foregroundColor(.white)
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
             }
-            HStack{
-                TextField("password", text: $viewModel.password)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                Text(viewModel.validationPassword)
+            .background(.red)
+            .cornerRadius(8)
+            .opacity(viewModel.status == "Ищем авто" ? 1.0 : 0.0)
+            
+            Button {
+                viewModel.refresh()
+            } label: {
+                Text("Заказать")
+                    .foregroundColor(.white)
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
             }
+            .background(.blue)
+            .cornerRadius(8)
+            .padding()
         }
-        .padding()
     }
 }
 
 #Preview {
     ContentView()
 }
-
 

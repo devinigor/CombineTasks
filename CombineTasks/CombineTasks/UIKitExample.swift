@@ -9,45 +9,29 @@ import UIKit
 import Combine
 
 class ViewController: UIViewController {
-    var viewModel = ContentViewModelUiKit()
-    let label = UILabel()
-    let textField = UITextField()
-    var aneCancellable: AnyCancellable?
-
+    
+    @IBOutlet weak var dataStatus: UILabel!
+    
+    @IBOutlet weak var statusLabel: UILabel!
+    
+    var viewModel = PiplineViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        label.frame = CGRect(x: 250, y: 100, width: 100, height: 50)
-        textField.frame = CGRect(x: 100, y: 100, width: 100, height: 50)
-        textField.placeholder = "Введите ваше имя"
-        view.addSubview(label)
-        view.addSubview(textField)
+
+        let subscr1 = Subscribers.Assign(object: dataStatus, keyPath: \.text)
+        viewModel.$data.subscribe(subscr1)
         
-        textField.delegate = self
-        
-      aneCancellable = viewModel.$validation
-            .receive(on: DispatchQueue.main)
-            .assign(to: \.text, on: label)
+        let subscr2 = Subscribers.Assign(object: statusLabel, keyPath: \.text)
+        viewModel.$status.subscribe(subscr2)
+
     }
 
-
-}
-
-
-final class ContentViewModelUiKit: ObservableObject {
-    @Published var name = ""
-    @Published var validation: String? = ""
+    @IBAction func cancel(_ sender: Any) {
+        viewModel.cancel()
+    }
     
-    init() {
-        $name
-            .map { $0.isEmpty ? "🚫" : "✅" }
-            .assign(to: &$validation)
-
-    }
-}
-
-extension ViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        viewModel.name = string
-        return true
+    @IBAction func refresh(_ sender: Any) {
+        viewModel.refresh()
     }
 }
